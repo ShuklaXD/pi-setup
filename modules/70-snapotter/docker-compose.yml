@@ -1,0 +1,48 @@
+# SnapOtter — self-hosted file-tools suite (image/video/audio/PDF/convert + some
+# local AI). CPU image (Pi 4 has no NVIDIA GPU). Memory limits are set so a heavy
+# AI job (upscale/transcribe) gets OOM-killed in isolation instead of taking down
+# Deluge/AdGuard/etc. Postgres password is the upstream default and the DB is NOT
+# exposed to the host, so it stays internal-only.
+services:
+  snapotter:
+    image: snapotter/snapotter:latest
+    container_name: snapotter
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      - DATABASE_URL=postgres://snapotter:snapotter@postgres:5432/snapotter
+      - REDIS_URL=redis://redis:6379
+    volumes:
+      - ${APPDATA:-/home/shukks/appdata}/snapotter/data:/data
+    ports:
+      - "1349:1349"
+    mem_limit: 2g            # cap: protects the host from runaway AI jobs
+    mem_reservation: 512m
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: snapotter-postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=snapotter
+      - POSTGRES_PASSWORD=snapotter
+      - POSTGRES_DB=snapotter
+    volumes:
+      - ${APPDATA:-/home/shukks/appdata}/snapotter/postgres:/var/lib/postgresql/data
+    mem_limit: 512m
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U snapotter"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:8-alpine
+    container_name: snapotter-redis
+    restart: unless-stopped
+    command: ["redis-server", "--maxmemory", "192mb", "--maxmemory-policy", "allkeys-lru"]
+    volumes:
+      - ${APPDATA:-/home/shukks/appdata}/snapotter/redis:/data
+    mem_limit: 256m

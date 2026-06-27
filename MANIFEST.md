@@ -5,6 +5,8 @@ Each entry corresponds to a module under `modules/`.
 
 | Module | What it does | Added |
 |--------|--------------|-------|
+| `70-snapotter` | SnapOtter file-tools suite (app + Postgres 17 + Redis 8), CPU image, RAM-capped; UI on 1349 | 2026-06-27 |
+| `05-cgroup-memory` | Enable kernel cgroup memory controller so Docker mem_limit works (boot cmdline + reboot) | 2026-06-27 |
 | `60-it-tools` | IT-Tools self-hosted developer utilities (web UI on 8082) | 2026-06-27 |
 | `50-dashy` | Dashy dashboard linking all services; layout committed as conf.yml (4000) | 2026-06-27 |
 | `40-adguard` | AdGuard Home network-wide DNS ad-blocking (53 DNS, 3000 admin) | 2026-06-27 |
