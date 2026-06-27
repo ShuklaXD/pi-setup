@@ -1,0 +1,22 @@
+# Deluge — BitTorrent client with web UI (LinuxServer.io image).
+# Paths/IDs are injected by install.sh from the live system; the defaults below
+# keep `docker compose up` working standalone too. Config + downloads live on the
+# host (outside git); only this definition is version-controlled.
+services:
+  deluge:
+    image: lscr.io/linuxserver/deluge:latest
+    container_name: deluge
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - TZ=${TZ:-Asia/Kolkata}
+      - DELUGE_LOGLEVEL=error
+    volumes:
+      - ${APPDATA:-/home/shukks/appdata}/deluge:/config
+      - ${DOWNLOADS:-/home/shukks/downloads}:/downloads
+    ports:
+      - "8112:8112"        # web UI
+      - "6881:6881"        # torrent traffic (tcp)
+      - "6881:6881/udp"    # torrent traffic (udp)
+      - "58846:58846"      # daemon RPC (for thin/desktop clients)
