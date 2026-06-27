@@ -1,0 +1,40 @@
+# Dashy configuration — version-controlled dashboard layout.
+# Edit this file (or via the Dashy UI, then export back here) and re-run the
+# module to apply. Replace 10.75.12.44 with your Pi's LAN IP if it changes.
+pageInfo:
+  title: Home Server
+  description: Raspberry Pi services
+
+appConfig:
+  theme: nord
+  layout: auto
+  iconSize: large
+
+sections:
+  - name: Management
+    icon: fas fa-cogs
+    items:
+      - title: Portainer
+        description: Docker dashboard
+        icon: hl-portainer
+        url: https://10.75.12.44:9443
+        target: newtab
+      - title: AdGuard Home
+        description: DNS ad-blocking
+        icon: hl-adguardhome
+        url: http://10.75.12.44:3000
+        target: newtab
+
+  - name: Apps
+    icon: fas fa-th
+    items:
+      - title: Deluge
+        description: Torrents (via PIA VPN)
+        icon: hl-deluge
+        url: http://10.75.12.44:8112
+        target: newtab
+      - title: IT-Tools
+        description: Developer utilities
+        icon: hl-it-tools
+        url: http://10.75.12.44:8082
+        target: newtab

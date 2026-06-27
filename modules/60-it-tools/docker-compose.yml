@@ -1,0 +1,9 @@
+# IT-Tools — a collection of handy developer/sysadmin utilities (encoders,
+# converters, generators, formatters). Stateless; no config or volumes needed.
+services:
+  it-tools:
+    image: corentinth/it-tools:latest
+    container_name: it-tools
+    restart: unless-stopped
+    ports:
+      - "8082:80"

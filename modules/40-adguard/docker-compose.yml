@@ -1,0 +1,15 @@
+# AdGuard Home — network-wide ad/tracker blocking via DNS.
+# Point your router's (or devices') DNS at this Pi's LAN IP to use it.
+services:
+  adguardhome:
+    image: adguard/adguardhome:latest
+    container_name: adguardhome
+    restart: unless-stopped
+    volumes:
+      - ${APPDATA:-/home/shukks/appdata}/adguard/work:/opt/adguardhome/work
+      - ${APPDATA:-/home/shukks/appdata}/adguard/conf:/opt/adguardhome/conf
+    ports:
+      - "53:53/tcp"        # DNS
+      - "53:53/udp"        # DNS
+      - "3000:3000/tcp"    # initial setup wizard (and optional admin)
+      - "8081:80/tcp"      # admin web UI (after setup, if set to port 80)
