@@ -5,11 +5,17 @@ Enables the kernel **cgroup memory controller** so Docker `mem_limit` /
 
 ## Why this exists
 
-Raspberry Pi OS ships with the memory cgroup controller **disabled** — the boot
-cmdline contains `cgroup_disable=memory`. Without this fix, every container memory
-limit is **silently ignored** (Docker prints "Your kernel does not support memory
-limit capabilities ... Limitation discarded.") and a runaway process (e.g. a
-SnapOtter AI job) could exhaust RAM and take down other containers.
+The memory cgroup controller is **disabled** by a `cgroup_disable=memory` boot
+arg. Without this fix, every container memory limit is **silently ignored**
+(Docker prints "Your kernel does not support memory limit capabilities ...
+Limitation discarded.") and a runaway process (e.g. a SnapOtter AI job) could
+exhaust RAM and take down other containers.
+
+> **Note on this machine:** the `cgroup_disable=memory` arg is **injected by the
+> firmware** — it's in `/proc/device-tree/chosen/bootargs` but NOT in
+> `cmdline.txt`. The firmware prepends its own args and appends `cmdline.txt`
+> last, so adding `cgroup_enable=memory cgroup_memory=1` to `cmdline.txt`
+> overrides it (kernel command line is last-wins). Verify after reboot.
 
 ## What it does
 

@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
-# 05-cgroup-memory — enable the kernel cgroup MEMORY controller on Raspberry Pi OS
-# so Docker `mem_limit` actually works. Raspberry Pi OS ships with the memory
-# controller disabled (cmdline has `cgroup_disable=memory`), which makes container
-# memory limits silently no-ops. Edits the boot cmdline and requires a REBOOT.
-# Idempotent: does nothing once the controller is active.
+# 05-cgroup-memory — enable the kernel cgroup MEMORY controller so Docker
+# `mem_limit` actually works. The memory controller is disabled by a
+# `cgroup_disable=memory` boot arg, which makes container memory limits silently
+# no-ops. On this machine that arg is INJECTED BY THE FIRMWARE (it appears in
+# /proc/device-tree/chosen/bootargs but NOT in cmdline.txt). Since the firmware
+# prepends its args and cmdline.txt is appended last, adding
+# `cgroup_enable=memory cgroup_memory=1` here overrides it (kernel = last wins).
+# This also handles the normal case where cgroup_disable=memory IS in cmdline.txt.
+# Edits the boot cmdline and requires a REBOOT. Idempotent.
 set -euo pipefail
 source "$PI_SETUP_ROOT/lib/common.sh"
 
