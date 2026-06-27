@@ -1,0 +1,15 @@
+# secrets — never commit
+*.key
+*.pem
+*.env
+.env
+secrets/
+*.secret
+
+# editor / OS noise
+*.swp
+*~
+.DS_Store
+
+# backups created by lib/common.sh link()
+*.bak.*
