@@ -1,0 +1,21 @@
+# Samba — network drive (SMB) for Windows/macOS/Linux access.
+# Uses host networking so SMB + Windows discovery (wsdd/avahi) work cleanly.
+# Two shares: "Shares" (read-write) and "Downloads" (read-only). The Samba
+# password is a secret pulled from a gitignored .env in this directory.
+services:
+  samba:
+    image: ghcr.io/servercontainers/samba:latest
+    container_name: samba
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      # User account (UID 1000 = host user "shukks", so files stay owned by you).
+      ACCOUNT_shukks: ${SMB_PASSWORD:?set SMB_PASSWORD in modules/90-samba/.env}
+      UID_shukks: "1000"
+      GROUPS_shukks: "1000"
+      # Share definitions (smb.conf is generated from these).
+      SAMBA_VOLUME_CONFIG_shares: "[Shares]; path=/shares/general; valid users = shukks; guest ok = no; read only = no; browseable = yes"
+      SAMBA_VOLUME_CONFIG_downloads: "[Downloads]; path=/shares/downloads; valid users = shukks; guest ok = no; read only = yes; browseable = yes"
+    volumes:
+      - ${SHARES_DIR:-/home/shukks/shares}:/shares/general
+      - ${DOWNLOADS:-/home/shukks/downloads}:/shares/downloads
