@@ -38,3 +38,13 @@ sections:
         icon: hl-it-tools
         url: http://10.75.12.44:8082
         target: newtab
+      - title: Stirling-PDF
+        description: PDF toolkit
+        icon: hl-stirling-pdf
+        url: http://10.75.12.44:8083
+        target: newtab
+      - title: SnapOtter
+        description: File tools + AI
+        icon: fas fa-otter
+        url: http://10.75.12.44:1349
+        target: newtab

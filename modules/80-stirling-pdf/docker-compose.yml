@@ -1,0 +1,22 @@
+# Stirling-PDF — self-hosted PDF toolkit (merge/split/OCR/convert/sign/compress).
+# Standard `latest` tag = all PDF features (incl. OCR + LibreOffice conversions),
+# arm64 published. No database. mem_limit takes effect once the cgroup memory
+# controller is enabled (see module 05-cgroup-memory + reboot).
+services:
+  stirling-pdf:
+    image: stirlingtools/stirling-pdf:latest
+    container_name: stirling-pdf
+    restart: unless-stopped
+    ports:
+      - "8083:8080"
+    environment:
+      - SECURITY_ENABLELOGIN=false      # LAN/Tailscale only; no login wall
+      - LANGS=en_GB
+      - SYSTEM_DEFAULTLOCALE=en-US
+    volumes:
+      - ${APPDATA:-/home/shukks/appdata}/stirling-pdf/configs:/configs
+      - ${APPDATA:-/home/shukks/appdata}/stirling-pdf/tessdata:/usr/share/tessdata
+      - ${APPDATA:-/home/shukks/appdata}/stirling-pdf/logs:/logs
+      - ${APPDATA:-/home/shukks/appdata}/stirling-pdf/pipeline:/pipeline
+    mem_limit: 1536m       # LibreOffice/OCR can spike; cap (needs 05-cgroup-memory)
+    mem_reservation: 256m
