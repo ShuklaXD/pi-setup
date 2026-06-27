@@ -5,4 +5,6 @@ Each entry corresponds to a module under `modules/`.
 
 | Module | What it does | Added |
 |--------|--------------|-------|
+| `20-portainer` | Portainer CE web dashboard (monitoring) via committed compose | 2026-06-27 |
+| `10-docker` | Docker Engine + Compose v2 plugin (native foundation) | 2026-06-27 |
 | `00-dotfiles` | Clone + apply `ShuklaXD/dotfiles` (zsh, vim, tmux, git, htop) | 2026-06-27 |
