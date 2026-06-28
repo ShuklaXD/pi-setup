@@ -5,6 +5,7 @@ Each entry corresponds to a module under `modules/`.
 
 | Module | What it does | Added |
 |--------|--------------|-------|
+| `110-claude-config` | Captures Claude Code config into `~/.claude` (symlinked): workspaces-enforcement Bash hook + `workspaces`/`pi-setup` skills; merges hook into settings.json | 2026-06-28 |
 | `02-ssh-config` | SSH client config mapping `github.com` → `~/.ssh/shuklaxd` key (enables git push); keys kept out of repo | 2026-06-28 |
 | `100-homepage` | Home server landing page (nginx static site, Nord theme); links every app via its Cloudflare subdomain; UI on 8090 | 2026-06-28 |
 | `90-samba` | Samba network drive (SMB): Shares (rw) + Downloads (ro), private login, host net | 2026-06-27 |
