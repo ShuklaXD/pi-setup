@@ -17,7 +17,7 @@ of the file — add/remove cards there. Re-run the module to apply (nginx serves
 the bind-mounted dir live, so a browser refresh is usually enough):
 
 ```bash
-PI_SETUP_ROOT=~/pi-setup bash ~/pi-setup/modules/100-homepage/install.sh
+PI_SETUP_ROOT=~/workspaces/pi-setup bash ~/workspaces/pi-setup/modules/100-homepage/install.sh
 ```
 
 ## Cloudflare: public hostnames + SSO

@@ -5,8 +5,8 @@ OS reinstall (or on a brand-new machine), clone this repo and run one command to
 get back to an identically configured system.
 
 ```sh
-git clone <this-repo> ~/pi-setup
-cd ~/pi-setup
+git clone git@github.com:ShuklaXD/pi-setup.git ~/workspaces/pi-setup
+cd ~/workspaces/pi-setup
 ./install.sh
 ```
 
