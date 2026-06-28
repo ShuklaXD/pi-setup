@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>shubhiixd · home server</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%232e3440'/%3E%3Cpath d='M20 52 50 26 80 52' fill='none' stroke='%2388c0d0' stroke-width='8' stroke-linecap='round' stroke-linejoin='round'/%3E%3Crect x='32' y='50' width='36' height='26' rx='4' fill='none' stroke='%238fbcbb' stroke-width='7'/%3E%3C/svg%3E" />
+  <style>
+    :root{
+      --pn0:#2e3440; --pn1:#3b4252; --pn2:#434c5e; --pn3:#4c566a;
+      --sn0:#d8dee9; --sn1:#e5e9f0; --sn2:#eceff4;
+      --fr0:#8fbcbb; --fr1:#88c0d0; --fr2:#81a1c1; --fr3:#5e81ac;
+      --au-red:#bf616a; --au-org:#d08770; --au-yel:#ebcb8b; --au-grn:#a3be8c; --au-pur:#b48ead;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+    body{
+      min-height:100vh;color:var(--sn1);
+      background:
+        radial-gradient(900px 600px at 12% -10%, rgba(94,129,172,.30), transparent 60%),
+        radial-gradient(900px 600px at 110% 10%, rgba(143,188,187,.18), transparent 55%),
+        linear-gradient(160deg,#2b303b 0%, var(--pn0) 45%, #292e38 100%);
+      background-attachment:fixed;
+    }
+    .wrap{max-width:1080px;margin:0 auto;padding:56px 24px 72px}
+
+    header.hero{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:8px}
+    .brand{display:flex;align-items:center;gap:16px}
+    .logo{width:56px;height:56px;border-radius:16px;background:linear-gradient(145deg,var(--fr1),var(--fr3));
+      display:grid;place-items:center;box-shadow:0 8px 24px rgba(94,129,172,.35)}
+    .logo svg{width:32px;height:32px}
+    h1{font-size:30px;font-weight:700;letter-spacing:-.5px;color:var(--sn2)}
+    h1 .dim{color:var(--fr1)}
+    .sub{color:var(--pn0);color:#9aa5b8;font-size:14px;margin-top:2px}
+    .clock{text-align:right;font-variant-numeric:tabular-nums}
+    .clock .t{font-size:26px;font-weight:600;color:var(--sn2)}
+    .clock .d{font-size:13px;color:#9aa5b8}
+
+    .lock{display:inline-flex;align-items:center;gap:6px;margin-top:18px;padding:6px 12px;border-radius:999px;
+      background:rgba(163,190,140,.12);border:1px solid rgba(163,190,140,.35);color:var(--au-grn);font-size:12.5px;font-weight:500}
+    .lock svg{width:13px;height:13px}
+
+    h2.section{margin:42px 0 16px;font-size:13px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#8893a7;
+      display:flex;align-items:center;gap:10px}
+    h2.section::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgba(216,222,233,.18),transparent)}
+
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+    .card{
+      display:flex;align-items:center;gap:14px;padding:16px;border-radius:16px;text-decoration:none;color:inherit;
+      background:rgba(59,66,82,.55);border:1px solid rgba(216,222,233,.07);
+      backdrop-filter:blur(8px);transition:transform .16s ease,border-color .16s ease,background .16s ease;
+    }
+    .card:hover{transform:translateY(-3px);border-color:rgba(136,192,208,.55);background:rgba(67,76,94,.7)}
+    .icon{width:46px;height:46px;flex:none;border-radius:12px;background:rgba(46,52,64,.7);display:grid;place-items:center;overflow:hidden}
+    .icon img{width:30px;height:30px;object-fit:contain}
+    .lettermark{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;font-weight:700;font-size:18px;color:var(--pn0)}
+    .meta{min-width:0}
+    .title{display:block;font-weight:600;font-size:15.5px;color:var(--sn2)}
+    .desc{display:block;font-size:12.5px;color:#93a0b5;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+    footer{margin-top:56px;text-align:center;color:#6b7689;font-size:12.5px;line-height:1.7}
+    footer code{color:#8893a7;background:rgba(59,66,82,.6);padding:1px 6px;border-radius:5px}
+    a.flink{color:var(--fr1);text-decoration:none}
+    a.flink:hover{text-decoration:underline}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">
+          <svg viewBox="0 0 100 100" fill="none"><path d="M18 54 50 24 82 54" stroke="#eceff4" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/><rect x="32" y="52" width="36" height="26" rx="4" stroke="#2e3440" stroke-width="0" fill="#eceff4"/><path d="M44 78V62h12v16" stroke="#5e81ac" stroke-width="6" fill="none" stroke-linecap="round"/></svg>
+        </div>
+        <div>
+          <h1>shubhii<span class="dim">xd</span> <span style="color:#5b6577;font-weight:500">/ home</span></h1>
+          <div class="sub">Raspberry Pi home server · everything in one place</div>
+        </div>
+      </div>
+      <div class="clock">
+        <div class="t" id="clock-t">--:--</div>
+        <div class="d" id="clock-d">&nbsp;</div>
+      </div>
+    </header>
+
+    <div class="lock" title="This site is protected by Cloudflare Access (SSO)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+      Protected by Cloudflare Access — only you can sign in
+    </div>
+
+    <h2 class="section">Management</h2>
+    <div class="grid" id="grid-management"></div>
+
+    <h2 class="section">Apps</h2>
+    <div class="grid" id="grid-apps"></div>
+
+    <footer>
+      Served from this Pi via Cloudflare Tunnel · static page in the
+      <code>100-homepage</code> pi-setup module.<br/>
+      On the home network? Use the <a class="flink" href="#" id="lan-toggle">LAN links</a> instead.
+    </footer>
+  </div>
+
+  <script>
+    // ----- App catalogue ----------------------------------------------------
+    // Each app: public subdomain (works anywhere, behind Cloudflare Access) and
+    // a LAN fallback (works only on the home network / Tailscale).
+    const DOMAIN = "shubhiixd.com";
+    const LAN = "10.75.12.44";
+    const APPS = {
+      management: [
+        {name:"Portainer",  desc:"Docker management",   sub:"portainer", lan:"https://"+LAN+":9443", icon:"portainer",     color:"#13bef9"},
+        {name:"AdGuard Home",desc:"Network DNS / ad-block",sub:"adguard", lan:"http://"+LAN+":3000",  icon:"adguard-home",  color:"#67b279"},
+        {name:"Dashy",      desc:"Service dashboard",     sub:"dashy",    lan:"http://"+LAN+":4000",  icon:"dashy",         color:"#6c4bf6"},
+      ],
+      apps: [
+        {name:"Deluge",     desc:"Torrents (via PIA VPN)",sub:"deluge",  lan:"http://"+LAN+":8112",  icon:"deluge",        color:"#3a5e9c"},
+        {name:"IT-Tools",   desc:"Developer utilities",   sub:"it-tools",lan:"http://"+LAN+":8082",  icon:"it-tools",      color:"#5b9bd5"},
+        {name:"Stirling-PDF",desc:"PDF toolkit",          sub:"stirling",lan:"http://"+LAN+":8083",  icon:"stirling-pdf",  color:"#b8443c"},
+        {name:"SnapOtter",  desc:"File tools + AI",       sub:"snapotter",lan:"http://"+LAN+":1349", icon:null,            color:"#d08770", letter:"S"},
+      ],
+    };
+
+    const ICON_BASE = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/";
+    let useLan = false;
+
+    function urlFor(a){ return useLan ? a.lan : ("https://"+a.sub+"."+DOMAIN); }
+
+    function render(){
+      for (const [grp, list] of Object.entries(APPS)){
+        const el = document.getElementById("grid-"+grp);
+        el.innerHTML = list.map(a => {
+          const iconInner = a.icon
+            ? `<img src="${ICON_BASE}${a.icon}.png" alt="" loading="lazy"
+                 onerror="this.parentElement.innerHTML='<span class=&quot;lettermark&quot; style=&quot;background:${a.color}&quot;>${(a.letter||a.name[0])}</span>'">`
+            : `<span class="lettermark" style="background:${a.color}">${a.letter||a.name[0]}</span>`;
+          return `<a class="card" href="${urlFor(a)}" target="_blank" rel="noopener">
+              <span class="icon">${iconInner}</span>
+              <span class="meta"><span class="title">${a.name}</span><span class="desc">${a.desc}</span></span>
+            </a>`;
+        }).join("");
+      }
+    }
+
+    document.getElementById("lan-toggle").addEventListener("click", e => {
+      e.preventDefault();
+      useLan = !useLan;
+      e.target.textContent = useLan ? "remote links" : "LAN links";
+      render();
+    });
+
+    // ----- Clock ------------------------------------------------------------
+    function tick(){
+      const now = new Date();
+      document.getElementById("clock-t").textContent =
+        now.toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"});
+      document.getElementById("clock-d").textContent =
+        now.toLocaleDateString([], {weekday:"long", day:"numeric", month:"short"});
+    }
+    tick(); setInterval(tick, 1000*15);
+    render();
+  </script>
+</body>
+</html>

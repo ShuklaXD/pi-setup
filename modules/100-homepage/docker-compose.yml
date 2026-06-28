@@ -1,0 +1,14 @@
+# 100-homepage — the home server's landing page (custom static site).
+# Plain nginx serving the committed ./site directory read-only. The page links
+# out to every other service via its Cloudflare subdomain (and a LAN fallback).
+services:
+  homepage:
+    image: nginx:alpine
+    container_name: homepage
+    restart: unless-stopped
+    mem_limit: 64m
+    volumes:
+      # Committed site content (pinned by absolute path from install.sh).
+      - ${HOMEPAGE_SITE:-./site}:/usr/share/nginx/html:ro
+    ports:
+      - "8090:80"
