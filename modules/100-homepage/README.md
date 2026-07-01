@@ -43,6 +43,7 @@ one per row (all served from this host, so the service is `localhost:PORT`):
 | `stirling.shubhiixd.com`   | `http://localhost:8083`          |
 | `snapotter.shubhiixd.com`  | `http://localhost:1349`          |
 | `area.shubhiixd.com`       | `http://localhost:8091`          |
+| `games.shubhiixd.com`      | `http://localhost:8092`          |
 
 ### 2. Lock everything behind SSO (Cloudflare Access)
 

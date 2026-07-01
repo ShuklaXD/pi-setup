@@ -1,0 +1,16 @@
+# 130-emulatorjs — self-hosted EmulatorJS retro emulator.
+# EmulatorJS runs the emulation in the browser (WASM), so the server only hosts
+# static files — plain nginx, which (unlike the LinuxServer image) is arm64-safe.
+# The app (menu + player) is served from ./site; the ROM library lives outside
+# the repo under ~/emulatorjs (mounted at /usr/share/nginx/html/library).
+services:
+  emulatorjs:
+    image: nginx:alpine
+    container_name: emulatorjs
+    restart: unless-stopped
+    mem_limit: 128m
+    volumes:
+      - ${EJS_SITE:-./site}:/usr/share/nginx/html:ro
+      - ${EJS_LIBRARY:-./library}:/usr/share/nginx/html/library:ro
+    ports:
+      - "8092:80"     # play games here
