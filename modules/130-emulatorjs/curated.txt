@@ -1,0 +1,124 @@
+# Curated "best of" homebrew keep-list (system/filename). fetch-roms.sh only
+# copies ROMs listed here. Delete or empty this file to install everything.
+
+# --- NES ---
+nes/novathesquirrel.nes
+nes/assimilate.nes
+nes/driar.nes
+nes/owlia.nes
+nes/nomolos.nes
+nes/super-tilt-bro.nes
+nes/twindragons.nes
+nes/sir-ababol-remastered.nes
+nes/superuwol.nes
+nes/miedow.nes
+nes/lala.nes
+nes/cheril-the-goddess.nes
+nes/thwaite.nes
+nes/riseofamondus.nes
+
+# --- SNES ---
+snes/superbossgaiden.sfc
+snes/nwarpdaisakusen.smc
+snes/megafamilybros.smc
+snes/jetpilotrising.sfc
+snes/furryrpg.sfc
+snes/hilda.sfc
+snes/astrohawk.smc
+snes/bucket.smc
+
+# --- Game Boy (Color) ---
+gbc/ucity.gbc
+gbc/geometrix.gbc
+gbc/brickster.gbc
+gbc/burly.gbc
+gbc/combatsoccer.gbc
+gbc/initiald.gbc
+gbc/klondike.gbc
+
+# --- Game Boy Advance ---
+gba/anguna.gba
+gba/anotherworld.gba
+gba/thelordsofmidnight.gba
+gba/waimanu.gba
+gba/goodboyadvance.gba
+gba/spout.gba
+gba/powerpig.gba
+gba/metalwarrior4.gba
+gba/deflektor.gba
+gba/nebulus.gba
+gba/castlemaster.gba
+gba/goldrunner.gba
+gba/jetpack2.gba
+
+# --- Genesis / Mega Drive ---
+md/cavestory.bin
+md/oldtowers.bin
+md/papicommandoremix.bin
+md/miniplanets.bin
+md/xump2.bin
+md/vilqadventure.bin
+md/redqueenrampage.bin
+md/rickdangerous.bin
+md/rickdangerous2.bin
+md/fixitfelixjr.bin
+md/starchaser.bin
+md/mega-cheril-perils.bin
+md/headship.bin
+md/virtuaworm.bin
+
+# --- Sega Master System ---
+sms/silvervalley.sms
+sms/datastorm.sms
+sms/astroforce.sms
+sms/waimanu.sms
+sms/platformexplorer.sms
+sms/galacticrevenge.sms
+sms/swordstrike.sms
+sms/lostraider.sms
+sms/spacehawks.sms
+sms/wahmunchers.sms
+sms/blockquest.sms
+sms/picross.sms
+
+# --- Atari 2600 ---
+atari2600/halo2600.bin
+atari2600/anguna.bin
+atari2600/thrust.bin
+atari2600/dkarcade2600.bin
+atari2600/stardust.bin
+atari2600/fishy.bin
+atari2600/solarplexus.bin
+atari2600/runtysrevenge.bin
+atari2600/turtlebay.bin
+atari2600/winterfortress.bin
+
+# --- ColecoVision ---
+coleco/bombjack.rom
+coleco/pang.rom
+coleco/circuscharlie.rom
+coleco/kingsvalley.rom
+coleco/mopiranger.rom
+coleco/ninjaprincess.rom
+coleco/gulkave.rom
+coleco/trackandfield.rom
+coleco/wonderboy.rom
+coleco/thexder.rom
+coleco/zaxxonsupergame.rom
+coleco/starforce.rom
+coleco/pitfall2.rom
+coleco/frostbite.rom
+
+# --- Commodore 64 ---
+c64/sirababol.d64
+c64/uwolquestformoney.d64
+c64/gruniozerca.d64
+c64/nanakoincastle.d64
+c64/joegunngold.d64
+c64/captaincloudberry.d64
+c64/atomheart.d64
+c64/lumberjack.d64
+c64/quodinitexit.d64
+c64/trolleyfollies.d64
+c64/honeybee.d64
+c64/thevicesquad.d64

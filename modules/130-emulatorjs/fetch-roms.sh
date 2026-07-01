@@ -8,6 +8,18 @@ LIBROOT="${1:-$HOME/emulatorjs/library}"
 CACHE="$LIBROOT/../.cache/repos"
 mkdir -p "$CACHE"
 
+# Optional curation: if curated.txt (next to this script) exists, only copy the
+# ROMs it lists ("system/filename" per line). Remove the file to install all.
+SELF="$(cd "$(dirname "$0")" && pwd)"
+declare -A KEEP
+if [ -f "$SELF/curated.txt" ]; then
+  while IFS= read -r line; do
+    line="${line%%#*}"; line="$(echo "$line" | xargs)"
+    [ -n "$line" ] && KEEP["$line"]=1
+  done < "$SELF/curated.txt"
+  echo "curated mode: keeping ${#KEEP[@]} listed games"
+fi
+
 # retrobrews repo | local folder | ROM extensions (space-separated)
 MAP="
 nes-games|nes|nes
@@ -38,6 +50,7 @@ echo "$MAP" | while IFS='|' read -r repo folder exts; do
     for f in "$clone"/*."$ext"; do
       base="$(basename "$f")"
       case "$base" in README*|LICENSE*|readme*|license*) continue;; esac
+      [ ${#KEEP[@]} -gt 0 ] && [ -z "${KEEP[$folder/$base]:-}" ] && continue   # curation
       [ -f "$romdir/$base" ] || { cp "$f" "$romdir/$base"; n=$((n + 1)); }
       # matching box art shares the ROM's basename (e.g. airbattle.rom / airbattle.png)
       stem="${base%.*}"

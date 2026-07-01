@@ -5,7 +5,7 @@ Each entry corresponds to a module under `modules/`.
 
 | Module | What it does | Added |
 |--------|--------------|-------|
-| `130-emulatorjs` | Self-hosted EmulatorJS retro games, fully offline (engine+cores bundled locally); 481 free homebrew games across 9 systems (NES/SNES/GB/GBA/Genesis/SMS/Atari2600/Coleco/C64); UI on 8092 | 2026-07-01 |
+| `130-emulatorjs` | Self-hosted EmulatorJS retro games, fully offline (engine+cores bundled locally); ~100 curated free homebrew games w/ box art across 9 systems (NES/SNES/GB/GBA/Genesis/SMS/Atari2600/Coleco/C64); UI on 8092 | 2026-07-01 |
 | `120-area-finder` | Deploys the area-finder app (property area converter + offline snapshots, PWA + Node backend) from `ShuklaXD/property-log`; UI on 8091 | 2026-06-28 |
 | `110-claude-config` | Captures Claude Code config into `~/.claude` (symlinked): workspaces-enforcement Bash hook + `workspaces`/`pi-setup` skills; merges hook into settings.json | 2026-06-28 |
 | `02-ssh-config` | SSH client config mapping `github.com` → `~/.ssh/shuklaxd` key (enables git push); keys kept out of repo | 2026-06-28 |

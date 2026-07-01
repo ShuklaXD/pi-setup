@@ -20,10 +20,12 @@ EmulatorJS runs the emulation client-side (WASM), so the server is just static
 - **`fetch-data.sh`** — downloads the EmulatorJS `4.2.3.7z` release (~290 MB, all
   cores) and extracts it to `~/emulatorjs/data` (needs `7z` / `p7zip-full`).
 - **`fetch-roms.sh`** — shallow-`git clone`s the **retrobrews** homebrew
-  collections (not the rate-limited REST API) and copies ROMs into
-  `~/emulatorjs/library/roms/<system>/`. **481 free games** across 9 systems:
-  NES, SNES, Game Boy (Color), GBA, Genesis/Mega Drive, Master System,
-  Atari 2600, ColecoVision, Commodore 64.
+  collections (not the rate-limited REST API) and copies ROMs + box art into
+  `~/emulatorjs/library/`. Systems: NES, SNES, Game Boy (Color), GBA,
+  Genesis/Mega Drive, Master System, Atari 2600, ColecoVision, Commodore 64.
+- **`curated.txt`** — a keep-list (`system/filename` per line) of ~100
+  hand-picked "best of" homebrew titles. `fetch-roms.sh` only copies games it
+  lists. **Delete/empty this file to install the full ~480-game collection.**
 - **`gen-library.sh`** — scans the ROM folders and writes `games.json` (title,
   system label, EmulatorJS core) for the menu.
 
