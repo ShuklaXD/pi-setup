@@ -8,7 +8,7 @@ source "$PI_SETUP_ROOT/lib/common.sh"
 have docker || { err "docker not installed — run 10-docker first"; exit 1; }
 
 APP_DIR="$HOME/workspaces/area-finder"
-REPO="git@github.com:ShuklaXD/area-finder.git"
+REPO="git@github.com:ShuklaXD/property-log.git"
 
 if [ -d "$APP_DIR/.git" ]; then
   step "updating area-finder (git pull --ff-only)"

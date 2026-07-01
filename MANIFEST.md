@@ -5,7 +5,7 @@ Each entry corresponds to a module under `modules/`.
 
 | Module | What it does | Added |
 |--------|--------------|-------|
-| `120-area-finder` | Deploys the area-finder app (property area converter + offline snapshots, PWA + Node backend) from `ShuklaXD/area-finder`; UI on 8091 | 2026-06-28 |
+| `120-area-finder` | Deploys the area-finder app (property area converter + offline snapshots, PWA + Node backend) from `ShuklaXD/property-log`; UI on 8091 | 2026-06-28 |
 | `110-claude-config` | Captures Claude Code config into `~/.claude` (symlinked): workspaces-enforcement Bash hook + `workspaces`/`pi-setup` skills; merges hook into settings.json | 2026-06-28 |
 | `02-ssh-config` | SSH client config mapping `github.com` → `~/.ssh/shuklaxd` key (enables git push); keys kept out of repo | 2026-06-28 |
 | `100-homepage` | Home server landing page (nginx static site, Nord theme); links every app via its Cloudflare subdomain; UI on 8090 | 2026-06-28 |

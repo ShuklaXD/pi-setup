@@ -5,7 +5,7 @@ offline-first property snapshot logger (PWA + tiny zero-dependency Node backend)
 UI on **:8091**.
 
 The app is its own project (kept under `~/workspaces/area-finder`, repo
-`ShuklaXD/area-finder`), following the convention that code projects live in
+`ShuklaXD/property-log`), following the convention that code projects live in
 `~/workspaces`. This module just deploys it:
 
 1. Clones the repo into `~/workspaces/area-finder` (or `git pull` if present).
@@ -21,7 +21,7 @@ PI_SETUP_ROOT=~/workspaces/pi-setup bash ~/workspaces/pi-setup/modules/120-area-
 
 - `10-docker` (engine + compose).
 - `02-ssh-config` so the clone over SSH authenticates on a fresh machine.
-- The `ShuklaXD/area-finder` repo must be pushed for the clone step to work on a
+- The `ShuklaXD/property-log` repo must be pushed for the clone step to work on a
   clean box. On this machine the directory already exists, so it builds in place.
 
 ## Cloudflare
