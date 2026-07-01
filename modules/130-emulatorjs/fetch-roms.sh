@@ -23,7 +23,8 @@ c64-games|c64|prg d64 tap
 
 echo "$MAP" | while IFS='|' read -r repo folder exts; do
   [ -z "$repo" ] && continue
-  romdir="$LIBROOT/roms/$folder"; mkdir -p "$romdir"
+  romdir="$LIBROOT/roms/$folder"; artdir="$LIBROOT/art/$folder"
+  mkdir -p "$romdir" "$artdir"
   clone="$CACHE/$repo"
   if [ -d "$clone/.git" ]; then
     git -C "$clone" pull -q --ff-only 2>/dev/null || true
@@ -38,6 +39,9 @@ echo "$MAP" | while IFS='|' read -r repo folder exts; do
       base="$(basename "$f")"
       case "$base" in README*|LICENSE*|readme*|license*) continue;; esac
       [ -f "$romdir/$base" ] || { cp "$f" "$romdir/$base"; n=$((n + 1)); }
+      # matching box art shares the ROM's basename (e.g. airbattle.rom / airbattle.png)
+      stem="${base%.*}"
+      [ -f "$clone/$stem.png" ] && [ ! -f "$artdir/$stem.png" ] && cp "$clone/$stem.png" "$artdir/$stem.png" || true
     done
   done
   shopt -u nullglob nocaseglob

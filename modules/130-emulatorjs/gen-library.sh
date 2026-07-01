@@ -28,9 +28,14 @@ if os.path.isdir(roms):
         core = CORE.get(system.lower(), system.lower())
         for fn in sorted(os.listdir(sd)):
             if fn.startswith(".") or os.path.splitext(fn)[1].lower() not in EXT: continue
+            stem = os.path.splitext(fn)[0]
+            art = None
+            if os.path.isfile(os.path.join(lib, "art", system, stem + ".png")):
+                art = "art/%s/%s.png" % (system, stem)
             games.append({"title": title(fn),
                           "system": LABEL.get(system.lower(), system.upper()),
-                          "core": core, "rom": "roms/%s/%s" % (system, fn)})
+                          "core": core, "rom": "roms/%s/%s" % (system, fn),
+                          "art": art})
 os.makedirs(lib, exist_ok=True)
 with open(os.path.join(lib, "games.json"), "w") as f:
     json.dump({"games": games}, f, indent=2)
