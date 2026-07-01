@@ -11,6 +11,8 @@ services:
     mem_limit: 128m
     volumes:
       - ${EJS_SITE:-./site}:/usr/share/nginx/html:ro
+      # EmulatorJS engine + WASM cores (self-hosted → fully offline, no CDN).
+      - ${EJS_ENGINE:-./data}:/usr/share/nginx/html/data:ro
       - ${EJS_LIBRARY:-./library}:/usr/share/nginx/html/library:ro
     ports:
       - "8092:80"     # play games here

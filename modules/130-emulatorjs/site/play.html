@@ -28,9 +28,9 @@
     window.EJS_gameName = title;
     window.EJS_startOnLoaded = true;
     window.EJS_color = '#00e5ff';
-    // EmulatorJS engine (WASM cores) is loaded from its CDN; the ROM stays local.
-    window.EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
+    // Engine + WASM cores are self-hosted on the Pi → fully offline, no CDN.
+    window.EJS_pathtodata = 'data/';
   </script>
-  <script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script>
+  <script src="data/loader.js"></script>
 </body>
 </html>

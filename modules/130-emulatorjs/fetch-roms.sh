@@ -1,21 +1,46 @@
 #!/usr/bin/env bash
-# Download the free, redistributable homebrew NES collection (retrobrews/nes-games)
-# into the ROM folder. Idempotent: skips files already present. Homebrew only —
-# no commercial ROMs.
+# Download the free, redistributable homebrew game collections from the
+# retrobrews GitHub repos, across every system EmulatorJS can play. Uses shallow
+# git clones (not the REST API, which is rate-limited). Idempotent. Homebrew /
+# public-domain only — no commercial ROMs.
 set -euo pipefail
-DEST="${1:-$HOME/emulatorjs/library/roms/nes}"
-mkdir -p "$DEST"
+LIBROOT="${1:-$HOME/emulatorjs/library}"
+CACHE="$LIBROOT/../.cache/repos"
+mkdir -p "$CACHE"
 
-echo "Listing retrobrews/nes-games…"
-curl -fsSL "https://api.github.com/repos/retrobrews/nes-games/contents/" \
-  | python3 -c '
-import sys, json
-for f in json.load(sys.stdin):
-    if isinstance(f, dict) and f.get("name","").lower().endswith(".nes"):
-        print(f["name"] + "\t" + f["download_url"])
-' | while IFS=$'\t' read -r name url; do
-  out="$DEST/$name"
-  [ -f "$out" ] && continue
-  if curl -fsSL "$url" -o "$out"; then echo "  + $name"; else echo "  ! failed $name"; rm -f "$out"; fi
+# retrobrews repo | local folder | ROM extensions (space-separated)
+MAP="
+nes-games|nes|nes
+snes-games|snes|smc sfc
+gbc-games|gbc|gb gbc
+gba-games|gba|gba
+md-games|md|bin smd
+sms-games|sms|sms
+atari2600-games|atari2600|bin
+colecovision-games|coleco|rom bin
+c64-games|c64|prg d64 tap
+"
+
+echo "$MAP" | while IFS='|' read -r repo folder exts; do
+  [ -z "$repo" ] && continue
+  romdir="$LIBROOT/roms/$folder"; mkdir -p "$romdir"
+  clone="$CACHE/$repo"
+  if [ -d "$clone/.git" ]; then
+    git -C "$clone" pull -q --ff-only 2>/dev/null || true
+  else
+    echo "== cloning retrobrews/$repo =="
+    git clone --depth 1 -q "https://github.com/retrobrews/$repo.git" "$clone" || { echo "  ! clone failed"; continue; }
+  fi
+  n=0
+  shopt -s nullglob nocaseglob
+  for ext in $exts; do
+    for f in "$clone"/*."$ext"; do
+      base="$(basename "$f")"
+      case "$base" in README*|LICENSE*|readme*|license*) continue;; esac
+      [ -f "$romdir/$base" ] || { cp "$f" "$romdir/$base"; n=$((n + 1)); }
+    done
+  done
+  shopt -u nullglob nocaseglob
+  echo "  $folder: +$n new ($(ls -1 "$romdir" | wc -l) total)"
 done
-echo "NES ROMs: $(ls -1 "$DEST" | wc -l) files in $DEST"
+echo "Total ROMs: $(find "$LIBROOT/roms" -type f | wc -l) across $(ls "$LIBROOT/roms" | wc -l) systems"
