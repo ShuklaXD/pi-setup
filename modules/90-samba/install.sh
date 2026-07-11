@@ -34,5 +34,5 @@ step "bringing up Samba (compose up -d)"
 $DOCKER compose --env-file "$ENV_FILE" -f "$MOD_DIR/docker-compose.yml" up -d
 
 ip="$(hostname -I 2>/dev/null | awk '{print $1}')"
-ok "Samba up — shares: \\\\${ip:-<pi-ip>}\\Shares (rw) and \\\\${ip:-<pi-ip>}\\Downloads (ro)"
+ok "Samba up — shares: \\\\${ip:-<pi-ip>}\\Shares (rw) and \\\\${ip:-<pi-ip>}\\Downloads (rw)"
 step "map on Windows: \\\\${ip:-<pi-ip>}\\Shares  user: shukks"

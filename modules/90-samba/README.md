@@ -10,7 +10,7 @@ host networking (clean SMB + Windows discovery via wsdd/avahi).
 | Share | Host path | Access |
 |-------|-----------|--------|
 | `Shares` | `~/shares` | read-write |
-| `Downloads` | `~/downloads` | **read-only** (so you can grab completed torrents without disturbing Deluge) |
+| `Downloads` | `~/downloads` | read-write |
 
 Login user: **`shukks`** (UID 1000, so files written from Windows stay owned by
 your host user). Password is in a **gitignored** `.env` (`SMB_PASSWORD`).
@@ -40,8 +40,9 @@ net use Z: \\<pi-ip>\Shares /user:shukks *
 
 ## Notes
 
-- To make `Downloads` writable, change `read only = yes` to `no` in
-  `docker-compose.yml` and re-run the module.
+- `Downloads` is read-write. To make it read-only again (e.g. to avoid
+  disturbing Deluge), change `read only = no` to `yes` in `docker-compose.yml`
+  and re-run the module.
 - Modern Windows requires SMB2/3 (this image provides it). If an old client can't
   connect, it's likely SMB1 being (correctly) refused.
 - Port 445 (and 139) must be free on the host — verified at setup time.
