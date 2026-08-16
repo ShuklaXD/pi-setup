@@ -1,0 +1,40 @@
+# Plex Media Server — streams the media library on this Pi to Plex clients.
+#
+# host networking is deliberate: Plex needs it for GDM/DLNA client discovery on
+# the LAN and for clean remote access. It therefore binds 32400 (server + web UI)
+# plus the DLNA/discovery ports directly on the host.
+#
+# Paths/IDs are injected by install.sh; the defaults keep a standalone `up`
+# working. An optional PLEX_CLAIM token comes from a gitignored .env.
+services:
+  plex:
+    image: lscr.io/linuxserver/plex:latest
+    container_name: plex
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - TZ=${TZ:-Asia/Kolkata}
+      - VERSION=docker              # let Plex's own repo pick the server build
+      # Claim token (plex.tv/claim, valid 4 min) links the server to your
+      # account on first start. Optional — you can also claim it in the web UI.
+      - PLEX_CLAIM=${PLEX_CLAIM:-}
+      # Skip the login prompt for browsers on the LAN.
+      - ALLOWED_NETWORKS=${LAN_SUBNET:-10.75.12.0/24}
+    volumes:
+      - ${APPDATA:-/home/shukks/appdata}/plex:/config
+      - ${MEDIA:-/home/shukks/media}:/media
+      # Finished torrents, read-only, so they can be added as a library too.
+      - ${DOWNLOADS:-/home/shukks/downloads}/completed:/downloads:ro
+      # Keep transcode scratch off /config (and out of the container layer).
+      - ${APPDATA:-/home/shukks/appdata}/plex/transcode:/transcode
+    # A Pi 4 has no Plex-usable hardware transcoder — this cap keeps a runaway
+    # software transcode or a big library scan from starving the rest of the box.
+    mem_limit: 1g
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:32400/identity >/dev/null || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 90s

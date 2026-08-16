@@ -5,6 +5,7 @@ Each entry corresponds to a module under `modules/`.
 
 | Module | What it does | Added |
 |--------|--------------|-------|
+| `140-plex` | Plex Media Server (host networking for client discovery); library at `~/media/{movies,tv,music,photos}` + finished torrents read-only; UI on 32400 | 2026-08-16 |
 | `130-emulatorjs` | Self-hosted **NES arcade** on EmulatorJS, fully offline (engine+cores bundled locally); all 82 free/homebrew NES games w/ box art, searchable menu, drop-in folder for your own cartridge dumps; UI on 8092 | 2026-08-16 |
 | `120-area-finder` | Deploys the area-finder app (property area converter + offline snapshots, PWA + Node backend) from `ShuklaXD/property-log`; UI on 8091 | 2026-06-28 |
 | `110-claude-config` | Captures Claude Code config into `~/.claude` (symlinked): workspaces-enforcement Bash hook + `workspaces`/`pi-setup` skills; merges hook into settings.json | 2026-06-28 |
