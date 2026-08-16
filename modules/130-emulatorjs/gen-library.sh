@@ -1,43 +1,64 @@
 #!/usr/bin/env bash
-# Scan the ROM folders and (re)write library/games.json used by the menu page.
+# Scan roms/nes/ and (re)write library/games.json used by the menu page.
+# Picks up any ROM you drop in yourself, not just the fetched homebrew.
+#
+# Display names: derived from the filename, unless overridden in titles.txt
+# (next to this script) with "filename.nes = Nice Title" lines.
 set -euo pipefail
 LIB="${1:-$HOME/emulatorjs/library}"
-python3 - "$LIB" <<'PY'
-import sys, os, json
-lib = sys.argv[1]
-roms = os.path.join(lib, "roms")
-# folder name -> EmulatorJS core (system) alias
-CORE = {"nes":"nes","snes":"snes","gb":"gb","gbc":"gb","gba":"gba",
-        "md":"segaMD","genesis":"segaMD","sms":"segaMS","gg":"segaGG",
-        "atari2600":"atari2600","coleco":"coleco","c64":"c64",
-        "n64":"n64","arcade":"arcade","psx":"psx"}
-# system folder -> pretty label for the menu badge
-LABEL = {"nes":"NES","snes":"SNES","gbc":"Game Boy","gb":"Game Boy","gba":"GBA",
-         "md":"Genesis","sms":"Master System","atari2600":"Atari 2600",
-         "coleco":"ColecoVision","c64":"Commodore 64"}
-EXT = {".nes",".sfc",".smc",".gb",".gbc",".gba",".md",".gen",".bin",".smd",
-       ".sms",".rom",".prg",".d64",".tap",".z64",".n64",".a26"}
+SELF="$(cd "$(dirname "$0")" && pwd)"
+python3 - "$LIB" "$SELF/titles.txt" <<'PY'
+import sys, os, json, re
+
+lib, titles_file = sys.argv[1], sys.argv[2]
+romdir = os.path.join(lib, "roms", "nes")
+EXT = {".nes", ".unf", ".unif", ".fds"}
+
+# Optional display-name overrides: "filename.nes = Nice Title"
+overrides = {}
+if os.path.isfile(titles_file):
+    for line in open(titles_file, encoding="utf-8"):
+        line = line.split("#", 1)[0].strip()
+        if "=" in line:
+            k, v = line.split("=", 1)
+            overrides[k.strip().lower()] = v.strip()
+
+SMALL = {"of", "the", "a", "an", "and", "or", "in", "on", "to", "vs"}
+
 def title(fn):
-    n = os.path.splitext(fn)[0].replace("-", " ").replace("_", " ")
-    return " ".join(w.capitalize() for w in n.split())
+    if fn.lower() in overrides:
+        return overrides[fn.lower()]
+    n = os.path.splitext(fn)[0]
+    n = re.sub(r"[\-_.]+", " ", n)             # dashes/underscores -> spaces
+    n = re.sub(r"\s*\([^)]*\)", "", n)         # strip (U), (USA), [!] tags
+    n = re.sub(r"\s*\[[^\]]*\]", "", n)
+    n = re.sub(r"\s+", " ", n).strip()
+    words = n.split()
+    out = []
+    for i, w in enumerate(words):
+        out.append(w if w.isupper() and len(w) > 1                # keep acronyms
+                   else w.lower() if i and w.lower() in SMALL     # minor words
+                   else w[:1].upper() + w[1:].lower())
+    return " ".join(out) or os.path.splitext(fn)[0]
+
 games = []
-if os.path.isdir(roms):
-    for system in sorted(os.listdir(roms)):
-        sd = os.path.join(roms, system)
-        if not os.path.isdir(sd): continue
-        core = CORE.get(system.lower(), system.lower())
-        for fn in sorted(os.listdir(sd)):
-            if fn.startswith(".") or os.path.splitext(fn)[1].lower() not in EXT: continue
-            stem = os.path.splitext(fn)[0]
-            art = None
-            if os.path.isfile(os.path.join(lib, "art", system, stem + ".png")):
-                art = "art/%s/%s.png" % (system, stem)
-            games.append({"title": title(fn),
-                          "system": LABEL.get(system.lower(), system.upper()),
-                          "core": core, "rom": "roms/%s/%s" % (system, fn),
-                          "art": art})
+if os.path.isdir(romdir):
+    for fn in sorted(os.listdir(romdir), key=str.lower):
+        if fn.startswith(".") or os.path.splitext(fn)[1].lower() not in EXT:
+            continue
+        stem = os.path.splitext(fn)[0]
+        art = None
+        for ext in (".png", ".jpg", ".jpeg", ".webp"):
+            if os.path.isfile(os.path.join(lib, "art", "nes", stem + ext)):
+                art = "art/nes/%s%s" % (stem, ext)
+                break
+        games.append({"title": title(fn), "system": "NES", "core": "nes",
+                      "rom": "roms/nes/%s" % fn, "art": art})
+
+games.sort(key=lambda g: g["title"].lower())
 os.makedirs(lib, exist_ok=True)
-with open(os.path.join(lib, "games.json"), "w") as f:
+with open(os.path.join(lib, "games.json"), "w", encoding="utf-8") as f:
     json.dump({"games": games}, f, indent=2)
-print("games.json: %d games" % len(games))
+print("games.json: %d NES games (%d with box art)"
+      % (len(games), sum(1 for g in games if g["art"])))
 PY

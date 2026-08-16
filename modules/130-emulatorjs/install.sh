@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# 130-emulatorjs — self-hosted EmulatorJS (static nginx site + browser WASM
-# cores), fully offline. Serves a game menu from ./site, the engine from
-# ~/emulatorjs/data, and a ROM library from ~/emulatorjs/library (both outside
-# the repo). First run downloads the engine bundle + the free homebrew games.
-# Idempotent.
+# 130-emulatorjs — self-hosted NES arcade on EmulatorJS (static nginx site +
+# browser WASM cores), fully offline. Serves a game menu from ./site, the engine
+# from ~/emulatorjs/data, and the ROM library from ~/emulatorjs/library (both
+# outside the repo). First run downloads the engine bundle + the free homebrew
+# NES games. Idempotent.
 set -euo pipefail
 source "$PI_SETUP_ROOT/lib/common.sh"
 
@@ -20,8 +20,8 @@ mkdir -p "$EJS_LIBRARY/roms"
 step "ensuring EmulatorJS engine (offline cores)"
 bash "$MOD_DIR/fetch-data.sh" "$EJS_HOME"
 
-step "fetching free homebrew ROMs (all systems)"
-bash "$MOD_DIR/fetch-roms.sh" "$EJS_LIBRARY" || warn "ROM fetch had issues (network / rate limit) — re-run later"
+step "fetching free NES homebrew ROMs"
+bash "$MOD_DIR/fetch-roms.sh" "$EJS_LIBRARY" || warn "ROM fetch had issues (network) — re-run later"
 
 step "generating games library (games.json)"
 bash "$MOD_DIR/gen-library.sh" "$EJS_LIBRARY"

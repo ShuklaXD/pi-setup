@@ -1,63 +1,39 @@
 #!/usr/bin/env bash
-# Download the free, redistributable homebrew game collections from the
-# retrobrews GitHub repos, across every system EmulatorJS can play. Uses shallow
-# git clones (not the REST API, which is rate-limited). Idempotent. Homebrew /
-# public-domain only — no commercial ROMs.
+# Download the free, redistributable NES homebrew collection from the retrobrews
+# GitHub repo (shallow clone — the REST API is rate-limited) into the library.
+# Idempotent: re-running only copies what's missing.
+#
+# Homebrew / public-domain only. Commercial NES ROMs (Mario, Contra, TMNT, …) are
+# still under copyright and are deliberately NOT fetched — drop your own
+# cartridge dumps into roms/nes/ instead (see README).
 set -euo pipefail
 LIBROOT="${1:-$HOME/emulatorjs/library}"
 CACHE="$LIBROOT/../.cache/repos"
 mkdir -p "$CACHE"
 
-# Optional curation: if curated.txt (next to this script) exists, only copy the
-# ROMs it lists ("system/filename" per line). Remove the file to install all.
-SELF="$(cd "$(dirname "$0")" && pwd)"
-declare -A KEEP
-if [ -f "$SELF/curated.txt" ]; then
-  while IFS= read -r line; do
-    line="${line%%#*}"; line="$(echo "$line" | xargs)"
-    [ -n "$line" ] && KEEP["$line"]=1
-  done < "$SELF/curated.txt"
-  echo "curated mode: keeping ${#KEEP[@]} listed games"
+REPO="nes-games"
+romdir="$LIBROOT/roms/nes"; artdir="$LIBROOT/art/nes"
+mkdir -p "$romdir" "$artdir"
+
+clone="$CACHE/$REPO"
+if [ -d "$clone/.git" ]; then
+  git -C "$clone" pull -q --ff-only 2>/dev/null || true
+else
+  echo "== cloning retrobrews/$REPO =="
+  git clone --depth 1 -q "https://github.com/retrobrews/$REPO.git" "$clone" || {
+    echo "  ! clone failed — check network, re-run later"; exit 1; }
 fi
 
-# retrobrews repo | local folder | ROM extensions (space-separated)
-MAP="
-nes-games|nes|nes
-snes-games|snes|smc sfc
-gbc-games|gbc|gb gbc
-gba-games|gba|gba
-md-games|md|bin smd
-sms-games|sms|sms
-atari2600-games|atari2600|bin
-colecovision-games|coleco|rom bin
-c64-games|c64|prg d64 tap
-"
-
-echo "$MAP" | while IFS='|' read -r repo folder exts; do
-  [ -z "$repo" ] && continue
-  romdir="$LIBROOT/roms/$folder"; artdir="$LIBROOT/art/$folder"
-  mkdir -p "$romdir" "$artdir"
-  clone="$CACHE/$repo"
-  if [ -d "$clone/.git" ]; then
-    git -C "$clone" pull -q --ff-only 2>/dev/null || true
-  else
-    echo "== cloning retrobrews/$repo =="
-    git clone --depth 1 -q "https://github.com/retrobrews/$repo.git" "$clone" || { echo "  ! clone failed"; continue; }
-  fi
-  n=0
-  shopt -s nullglob nocaseglob
-  for ext in $exts; do
-    for f in "$clone"/*."$ext"; do
-      base="$(basename "$f")"
-      case "$base" in README*|LICENSE*|readme*|license*) continue;; esac
-      [ ${#KEEP[@]} -gt 0 ] && [ -z "${KEEP[$folder/$base]:-}" ] && continue   # curation
-      [ -f "$romdir/$base" ] || { cp "$f" "$romdir/$base"; n=$((n + 1)); }
-      # matching box art shares the ROM's basename (e.g. airbattle.rom / airbattle.png)
-      stem="${base%.*}"
-      [ -f "$clone/$stem.png" ] && [ ! -f "$artdir/$stem.png" ] && cp "$clone/$stem.png" "$artdir/$stem.png" || true
-    done
-  done
-  shopt -u nullglob nocaseglob
-  echo "  $folder: +$n new ($(ls -1 "$romdir" | wc -l) total)"
+n=0
+shopt -s nullglob nocaseglob
+for f in "$clone"/*.nes; do
+  base="$(basename "$f")"
+  case "$base" in README*|LICENSE*) continue;; esac
+  [ -f "$romdir/$base" ] || { cp "$f" "$romdir/$base"; n=$((n + 1)); }
+  # box art shares the ROM basename (e.g. nomolos.nes / nomolos.png)
+  stem="${base%.*}"
+  [ -f "$clone/$stem.png" ] && [ ! -f "$artdir/$stem.png" ] && cp "$clone/$stem.png" "$artdir/$stem.png" || true
 done
-echo "Total ROMs: $(find "$LIBROOT/roms" -type f | wc -l) across $(ls "$LIBROOT/roms" | wc -l) systems"
+shopt -u nullglob nocaseglob
+
+echo "  nes: +$n new ($(ls -1 "$romdir" | wc -l) total ROMs, $(ls -1 "$artdir" | wc -l) with art)"
