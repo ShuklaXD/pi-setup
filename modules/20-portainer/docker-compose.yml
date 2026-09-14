@@ -7,8 +7,12 @@ services:
     container_name: portainer
     restart: unless-stopped
     ports:
-      - "9443:9443"   # HTTPS web UI
-      - "8000:8000"   # Edge agent tunnel (optional)
+      # 9443 is deliberately NOT published: module 150-sso-gateway binds it and
+      # proxies here, auto-logging you in off your Cloudflare Access session.
+      # Reach the UI on the same https://<pi>:9443 as always — via the gateway.
+      # Edge agent tunnel (optional). Host 8000 is taken by tcms-core, so it is
+      # published on 8001 instead.
+      - "8001:8000"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - portainer_data:/data

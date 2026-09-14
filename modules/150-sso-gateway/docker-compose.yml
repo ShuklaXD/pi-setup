@@ -1,0 +1,63 @@
+# 150-sso-gateway — one login (Cloudflare Access) opens every app.
+#
+# Two containers:
+#   caddy  — reverse proxy, binds the ports Portainer and Deluge used to publish
+#            so nothing downstream (tunnel ingress, homepage, Dashy) has to change.
+#   minter — logs in to those apps on your behalf and hands the browser their
+#            session cookie; only ever touched when a session is missing.
+#
+# App credentials come from a gitignored .env in this directory. They stay set
+# inside the apps, so anything reaching a container directly still needs them.
+services:
+  caddy:
+    image: caddy:2-alpine
+    container_name: sso-gateway
+    restart: unless-stopped
+    ports:
+      - "9443:9443"   # Portainer (was published by the portainer container)
+      - "8112:8112"   # Deluge    (was published by the gluetun container)
+    volumes:
+      - ${GW_CADDYFILE:-./Caddyfile}:/etc/caddy/Caddyfile:ro
+      - ${APPDATA:-/home/shukks/appdata}/sso-gateway/certs:/certs:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - minter
+    networks:
+      - default
+      - portainer
+      - deluge
+    mem_limit: 128m
+
+  minter:
+    image: python:3.13-alpine
+    container_name: sso-minter
+    restart: unless-stopped
+    command: ["python", "-u", "/app/minter.py"]
+    volumes:
+      - ${GW_MINTER:-./minter}:/app:ro
+    environment:
+      - PORTAINER_URL=https://portainer:9443
+      - PORTAINER_USER=${PORTAINER_USER:?set PORTAINER_USER in modules/150-sso-gateway/.env}
+      - PORTAINER_PASSWORD=${PORTAINER_PASSWORD:?set PORTAINER_PASSWORD in modules/150-sso-gateway/.env}
+      - DELUGE_URL=http://gluetun:8112
+      - DELUGE_PASSWORD=${DELUGE_PASSWORD:?set DELUGE_PASSWORD in modules/150-sso-gateway/.env}
+    networks:
+      - default
+      - portainer
+      - deluge
+    mem_limit: 128m
+
+networks:
+  # The app modules' own compose networks, joined so we can reach the containers
+  # now that they no longer publish ports to the host.
+  portainer:
+    external: true
+    name: 20-portainer_default
+  deluge:
+    external: true
+    name: 30-deluge_default
+
+volumes:
+  caddy_data:
+  caddy_config:

@@ -24,7 +24,9 @@ services:
       - FIREWALL_OUTBOUND_SUBNETS=${LAN_SUBNET:-10.75.12.0/24}
       - TZ=${TZ:-Asia/Kolkata}
     ports:
-      - "8112:8112"        # Deluge web UI (shares this netns)
+      # 8112 is deliberately NOT published: module 150-sso-gateway binds it and
+      # proxies here, auto-logging you in off your Cloudflare Access session.
+      # The web UI stays at http://<pi>:8112 as always — via the gateway.
       - "58846:58846"      # Deluge daemon RPC (thin/desktop clients)
     healthcheck:
       test: ["CMD", "/gluetun-entrypoint", "healthcheck"]

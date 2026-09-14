@@ -1,0 +1,59 @@
+# SSO gateway — fronts the apps that have their own login and no way to speak SSO.
+#
+# Requests arrive here either through the Cloudflare tunnel (already vetted by
+# Cloudflare Access) or straight from the LAN, which we treat as trusted. When
+# the browser already holds the app's session cookie we are a plain reverse
+# proxy — websockets, log streaming and consoles pass through untouched. When it
+# does not, the request goes to the minter, which logs in on your behalf and
+# redirects you back with the cookie set. Either way you never see a login form.
+#
+# The listen ports deliberately match the ports the apps used to publish, so the
+# Cloudflare tunnel ingress, the homepage LAN links and Dashy all keep working
+# unchanged.
+{
+	admin off
+	auto_https off
+	log {
+		output stderr
+		format console
+	}
+}
+
+# --- Portainer ---------------------------------------------------------------
+# TLS, because that is what 9443 has always spoken and the tunnel origin is
+# configured for https. The cert is self-signed by install.sh — same trust story
+# as Portainer's own cert, which this replaces.
+https://:9443 {
+	tls /certs/gateway.crt /certs/gateway.key
+
+	@nosession not header_regexp Cookie "(^|[; ])portainer_api_key="
+	handle @nosession {
+		reverse_proxy minter:8000 {
+			header_up X-Sso-App portainer
+		}
+	}
+
+	handle {
+		reverse_proxy https://portainer:9443 {
+			transport http {
+				tls_insecure_skip_verify
+			}
+		}
+	}
+}
+
+# --- Deluge ------------------------------------------------------------------
+# Deluge's web UI lives inside gluetun's network namespace, so the upstream is
+# the gluetun container.
+http://:8112 {
+	@nosession not header_regexp Cookie "(^|[; ])_session_id="
+	handle @nosession {
+		reverse_proxy minter:8000 {
+			header_up X-Sso-App deluge
+		}
+	}
+
+	handle {
+		reverse_proxy http://gluetun:8112
+	}
+}
