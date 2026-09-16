@@ -39,6 +39,7 @@ cd ~/workspaces/mqtt-server
 docker compose exec recorder python recorder.py tail    # last 20 messages
 docker compose exec recorder python recorder.py stats   # counts per topic
 sqlite3 data/mqtt.db                                    # ad-hoc SQL
+watch -n 2 'sqlite3 -header -column data/mqtt.db "SELECT committed_at, topic, payload FROM messages ORDER BY committed_at DESC LIMIT 5"'
 ```
 
 ## Tear down
