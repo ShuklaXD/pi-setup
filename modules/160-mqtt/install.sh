@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# 160-mqtt — Mosquitto MQTT broker + MQTTX Web, exposed to the internet via
-# Tailscale Funnel. The broker project is its own repo under ~/workspaces;
+# 160-mqtt — Mosquitto MQTT broker + MQTTX Web + SQLite message recorder,
+# exposed to the internet via Tailscale Funnel. The broker project is its own repo under ~/workspaces;
 # this module clones it (if needed), generates the password file, brings up
 # the containers and (re)applies the Funnel config. Mirrors its SETUP.md.
 # Idempotent.
@@ -43,8 +43,8 @@ else
 fi
 
 # --- containers --------------------------------------------------------------
-step "bringing up mosquitto + mqttx-web (compose up -d)"
-$DOCKER compose -f "$APP_DIR/docker-compose.yaml" up -d
+step "bringing up mosquitto + mqttx-web + recorder (compose up -d --build)"
+$DOCKER compose -f "$APP_DIR/docker-compose.yaml" up -d --build
 
 # --- tailscale funnel ----------------------------------------------------------
 if ! tailscale status >/dev/null 2>&1; then

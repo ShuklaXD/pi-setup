@@ -5,7 +5,7 @@ Each entry corresponds to a module under `modules/`.
 
 | Module | What it does | Added |
 |--------|--------------|-------|
-| `160-mqtt` | Mosquitto MQTT broker + MQTTX Web, published to the internet via Tailscale Funnel (mqtts 8443, wss 10000, dashboard 443); project repo at `~/workspaces/mqtt-server` | 2026-09-14 |
+| `160-mqtt` | Mosquitto MQTT broker + MQTTX Web, published to the internet via Tailscale Funnel (mqtts 8443, wss 10000, dashboard 443); SQLite recorder for `dmrc/#` + `system-health/#` (`data/mqtt.db`); project repo at `~/workspaces/mqtt-server` | 2026-09-14 |
 | `150-sso-gateway` | Makes the Cloudflare Access login the only login: Caddy binds 9443/8112 (Portainer + Deluge no longer publish them) and a minter service injects each app's session cookie, so neither shows a login form again | 2026-09-05 |
 | `140-plex` | Plex Media Server (host networking for client discovery); library at `~/media/{movies,tv,music,photos}` + finished torrents read-only; UI on 32400 | 2026-08-16 |
 | `130-emulatorjs` | Self-hosted **NES arcade** on EmulatorJS, fully offline (engine+cores bundled locally); all 82 free/homebrew NES games w/ box art, searchable menu, drop-in folder for your own cartridge dumps; UI on 8092 | 2026-08-16 |
