@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# 160-mqtt — Mosquitto MQTT broker + MQTTX Web + SQLite message recorder,
-# exposed to the internet via Tailscale Funnel. The broker project is its own repo under ~/workspaces;
+# 160-mqtt — Mosquitto MQTT broker + MQTTX Web + SQLite message recorder +
+# sensor monitoring dashboard, exposed to the internet via Tailscale Funnel. The broker project is its own repo under ~/workspaces;
 # this module clones it (if needed), generates the password file, brings up
 # the containers and (re)applies the Funnel config. Mirrors its SETUP.md.
 # Idempotent.
@@ -43,7 +43,7 @@ else
 fi
 
 # --- containers --------------------------------------------------------------
-step "bringing up mosquitto + mqttx-web + recorder (compose up -d --build)"
+step "bringing up mosquitto + mqttx-web + recorder + dashboard (compose up -d --build)"
 $DOCKER compose -f "$APP_DIR/docker-compose.yaml" up -d --build
 
 # --- tailscale funnel ----------------------------------------------------------
@@ -72,4 +72,6 @@ tailscale funnel --bg --https=10000 http://localhost:9001
 
 node="$(tailscale status --json 2>/dev/null | sed -n 's/.*"DNSName": *"\([^"]*\)\.".*/\1/p' | head -1)"
 node="${node:-<node>.ts.net}"
+ip="$(hostname -I 2>/dev/null | awk '{print $1}')"
 ok "MQTT up — mqtts://$node:8443 · wss://$node:10000/mqtt · https://$node (MQTTX Web) · user '$MQTT_USER'"
+ok "Dashboard up — http://${ip:-<pi-ip>}:8093  (public: https://dmrc.shubhiixd.com once routed)"
