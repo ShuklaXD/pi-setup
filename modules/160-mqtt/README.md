@@ -7,10 +7,19 @@ plus a **recorder** sidecar that persists every message on `dmrc/#` and
 sensor data. Mirrors the `SETUP.md` in the project repo.
 
 The project itself lives in its own repo at `~/workspaces/mqtt-server`
-(`git@bitbucket.org:verit_aiworx/mqtt-server.git`) — compose file + `mosquitto.conf`.
-This module clones/pulls it, generates the gitignored `config/passwd`
-(default user `mqtt-tri`; override with `MQTT_USER`/`MQTT_PASS` env at install
-time), runs `docker compose up -d`, and re-asserts the Funnel routes.
+(`git@bitbucket.org:verit_aiworx/mqtt-server.git`) and ships its own idempotent
+`start.sh`. This module only clones/pulls the repo and hands off to that script,
+so a machine rebuild and a manual start run identical code.
+
+`start.sh` generates the gitignored `config/passwd` (default user `mqtt-tri`;
+override with `MQTT_USER`/`MQTT_PASS` at install time), brings up all four
+containers, waits until each one answers, and re-asserts the Funnel routes.
+Run it directly for day-to-day use:
+
+```bash
+~/workspaces/mqtt-server/start.sh            # full start + Funnel
+~/workspaces/mqtt-server/start.sh --status   # what is running, changes nothing
+```
 
 ## One-time tailnet prerequisites (not scriptable)
 
