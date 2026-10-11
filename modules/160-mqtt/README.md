@@ -17,7 +17,19 @@ time), runs `docker compose up -d`, and re-asserts the Funnel routes.
 - Tailscale installed + `sudo tailscale up` on the node
 - MagicDNS + HTTPS Certificates enabled: <https://login.tailscale.com/admin/dns>
 - Funnel allowed for the node in the ACL (the first `funnel` run prints the link)
-- `sudo tailscale set --operator=$USER` — the module does this, but it prompts for sudo
+- `sudo tailscale set --operator=$USER` — **run this yourself in a terminal once.**
+  The module attempts it, but `sudo` needs a password, so an unattended run
+  cannot complete it. Until it is set every funnel command dies with
+  `sending serve config: Access denied: serve config denied`.
+
+The module detects the operator with
+`tailscale debug prefs | grep '"OperatorUser": "$USER"'` and skips the step when
+already set, so re-runs are clean. (The prefs key is `OperatorUser`, not
+`Operator`; and `tailscale funnel status` exiting 0 does not imply the operator
+is set — it prints "No serve config" either way.)
+
+The three `tailscale funnel --bg ...` calls are idempotent: each re-run just
+re-asserts the same route.
 
 ## Endpoints
 
