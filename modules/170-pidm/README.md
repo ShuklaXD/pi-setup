@@ -5,7 +5,7 @@ Paste a link → it downloads with up to 8 parallel connections (when the server
 supports byte ranges) into `~/downloads` — the samba **Downloads** share.
 
 The app is its own project at `~/workspaces/downloader` (local git repo, no
-remote yet). This module runs `docker compose up -d --build` there. Queue and
+remote yet). This module runs its `setup.sh` (writes `.env` with ~/downloads + ~/shares, then `docker compose up -d --build`). Queue and
 resume state persist in the `pidm-data` Docker volume.
 
 ```bash
